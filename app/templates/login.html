@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bee Bee's | Login</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav>
+    <h1><a href="/">📚 Bee Bee's Library </a>| Login</h1>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/books">Search</a>
+      <a href="/login" class="active">Login</a>
+    </div>
+  </nav>
+
+  <main class="card">
+    <h2>Login</h2>
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+    <form method="post" action="/login">
+      <label>Username<input name="username" required></label>
+      <label>Password<input name="password" type="password" required></label>
+      <button type="submit">Sign in</button>
+    </form>
+  </main>
+  {% include "partials/footer.html" %}
+</body>
+</html>

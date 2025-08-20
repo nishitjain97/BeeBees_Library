@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bee Bee's | Add Books</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav>
+    <h1><a href="/">📚 Bee Bee's Library </a>| Add Books</h1>
+    <div class="links">
+        <a href="/">Home</a>
+        <a href="/books">Search</a>
+        <form method="post" action="/logout" style="display:inline;">
+        <button type="submit" class="linklike">Logout{% if username %} ({{ username }}){% endif %}</button>
+        </form>
+    </div>
+</nav>
+
+  <main class="card">
+    <h2>Add a Book</h2>
+    <form id="book-form">
+      <label>Title<input name="title" required></label>
+      <label>Author (First)<input name="author_first" required></label>
+      <label>Author (Last)<input name="author_last" required></label>
+      <label>Year<input name="year" required></label>
+      <label>ISBN<input name="isbn" required></label>
+      <button type="submit">Save</button>
+    </form>
+    <p id="msg" class="msg"></p>
+  </main>
+
+  <script src="/static/add.js"></script>
+  {% include "partials/footer.html" %}
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>BeeBee's Library</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body.landing {
+      margin: 0;
+      height: 100vh;
+      background: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1350&q=80") no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    .overlay {
+      position: absolute;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.55);
+    }
+    .landing-card {
+      position: relative;
+      background: rgba(20,20,30,0.85);
+      padding: 40px 50px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+    .landing-card h1 {
+      font-size: 2.2em;
+      margin-bottom: 0.5em;
+    }
+    .landing-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 1.5em;
+    }
+    .landing-buttons a {
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #FFFFFF;
+      border: 2px solid #FFFFFF;
+      background-color: rgb(1 1 1 / 0.2);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      opacity: 0.5;
+    }
+    .landing-buttons a:hover {
+        opacity: 1;
+    }
+  </style>
+</head>
+<body class="landing">
+  <div class="overlay"></div>
+  <div class="landing-card">
+    <h1>📚 BeeBee's Library</h1>
+    <div class="landing-buttons">
+      <a href="/add">Add Books</a>
+      <a href="/books">Search Books</a>
+    </div>
+  </div>
+  {% include "partials/footer.html" %}
+</body>
+</html>

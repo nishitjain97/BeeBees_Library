@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bee Bee's | Search Books</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav>
+    <h1><a href="/">📚 Bee Bee's Library </a>| Search Books</h1>
+    <div class="links">
+        <a href="/">Home</a>
+        <a href="/books" class="active">Search</a>
+        <a href="/add">Add Books</a>
+    </div>
+    </nav>
+
+
+  <main class="card">
+  <div class="row" style="flex-wrap:wrap; gap:10px">
+    <input id="q" placeholder="Search title, author, year, ISBN…" style="flex:1; min-width: 260px;">
+    <input id="author" placeholder="Filter author (optional)" style="width:240px;">
+    <input id="yf" placeholder="Year from" inputmode="numeric" style="width:120px;">
+    <input id="yt" placeholder="Year to" inputmode="numeric" style="width:120px;">
+    <select id="sort" style="width:160px;">
+      <option value="title_asc">Title ↑</option>
+      <option value="title_desc">Title ↓</option>
+      <option value="author_asc">Author ↑</option>
+      <option value="author_desc">Author ↓</option>
+      <option value="year_asc">Year ↑</option>
+      <option value="year_desc">Year ↓</option>
+      <option value="newest">Newest</option>
+    </select>
+    <button id="search" class="btn primary">Search</button>
+    <button id="clear" class="btn ghost">Clear</button>
+  </div>
+
+  <table id="tbl">
+    <thead><tr><th>Title</th><th>Author</th><th>Year</th><th>ISBN</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <div id="pager" class="row" style="justify-content:space-between; margin-top:12px;">
+    <div id="count" class="muted"></div>
+    <div style="display:flex; gap:6px;">
+      <button id="prev" class="btn ghost">Prev</button>
+      <span id="pageinfo" class="muted" style="align-self:center;"></span>
+      <button id="next" class="btn ghost">Next</button>
+      <select id="pagesize">
+        <option>10</option><option selected>20</option><option>50</option>
+      </select>
+    </div>
+  </div>
+
+  <p id="empty" class="muted" style="display:none;">No books found.</p>
+</main>
+
+
+  <script src="/static/list.js"></script>
+  {% include "partials/footer.html" %}
+</body>
+</html>

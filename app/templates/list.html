@@ -36,7 +36,17 @@
   </div>
 
   <table id="tbl">
-    <thead><tr><th>Title</th><th>Author</th><th>Year</th><th>ISBN</th></tr></thead>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+        <th>ISBN</th>
+        {% if logged_in %}
+          <th>Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
     <tbody></tbody>
   </table>
 
@@ -55,6 +65,26 @@
   <p id="empty" class="muted" style="display:none;">No books found.</p>
 </main>
 
+  <script>
+      window.LOGGED_IN = {{ "true" if logged_in else "false" }};
+  </script>
+  <script>
+    async function deleteBook(id) {
+        if (!confirm("Delete this book?")) return;
+
+        const res = await fetch(`/api/books/${id}`, { method: 'DELETE' });
+        if (res.status === 204) {
+            alert("Book deleted");
+            load(); // refresh list without reload()
+        } else {
+            alert("Delete failed");
+        }
+    }
+
+    function editBook(id) {
+        window.location.href = `/edit/${id}`;
+    }
+  </script>
 
   <script src="/static/list.js"></script>
   {% include "partials/footer.html" %}

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bee Bee's | Edit Book</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav>
+    <h1><a href="/">📚 Bee Bee's Library </a>| Edit Book</h1>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/books" class="active">Search</a>
+      <a href="/add">Add Books</a>
+    </div>
+  </nav>
+
+  <main class="card">
+    <h2>Edit Book</h2>
+
+    <p id="msg" class="muted"></p>
+
+    <form id="edit-form">
+      <!-- We’ll use this ID in JS -->
+      <input type="hidden" name="id" value="{{ book.id }}">
+
+      <label>
+        Title
+        <input name="title" required value="{{ book.title }}">
+      </label>
+
+      <label>
+        Author first name
+        <input name="author_first" required value="{{ book.author_first }}">
+      </label>
+
+      <label>
+        Author last name
+        <input name="author_last" required value="{{ book.author_last }}">
+      </label>
+
+      <label>
+        Year
+        <input name="year" inputmode="numeric" value="{{ book.year }}">
+      </label>
+
+      <label>
+        ISBN
+        <input name="isbn" value="{{ book.isbn }}">
+      </label>
+
+      <div class="row" style="gap:8px; margin-top:12px;">
+        <button type="submit" class="btn primary">Save changes</button>
+        <button type="button" class="btn ghost" onclick="window.location.href='/books'">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('edit-form');
+    const msg = document.getElementById('msg');
+    const bookId = {{ book.id }};
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Saving…';
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      // We don’t need to send id in body, only fields that may change
+      delete data.id;
+
+      try {
+        const res = await fetch(`/api/books/${bookId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          const book = await res.json();
+          msg.textContent = `✅ Updated: ${book.title} by ${book.author_last}, ${book.author_first}`;
+          // Optional: redirect back to search after a short pause
+          setTimeout(() => {
+            window.location.href = '/books';
+          }, 800);
+        } else {
+          let detail = 'Error';
+          try {
+            const j = await res.json();
+            detail = j.detail || detail;
+          } catch (_) {}
+          msg.textContent = `⚠️ ${detail}`;
+        }
+      } catch (err) {
+        msg.textContent = '❌ Network error';
+      }
+    });
+  </script>
+
+  {% include "partials/footer.html" %}
+</body>
+</html>

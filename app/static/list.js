@@ -46,7 +46,24 @@ function render(data) {
     empty.style.display = 'none';
     for (const b of data.items) {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${escapeHtml(b.title)}</td><td>${escapeHtml(b.author_last)}, ${escapeHtml(b.author_first)}</td><td>${escapeHtml(b.year)}</td><td>${escapeHtml(b.isbn)}</td>`;
+      let row = `
+        <td>${escapeHtml(b.title)}</td>
+        <td>${escapeHtml(b.author_last)}, ${escapeHtml(b.author_first)}</td>
+        <td>${escapeHtml(b.year)}</td>
+        <td>${escapeHtml(b.isbn)}</td>
+      `;
+
+      if (window.LOGGED_IN === true || window.LOGGED_IN === "true") {
+        row += `
+          <td>
+            <button class="btn small" onclick="editBook(${b.id})">Edit</button>
+            <button class="btn small danger" onclick="deleteBook(${b.id})">Delete</button>
+          </td>
+        `;
+      }
+
+      tr.innerHTML = row;
+
       tbody.appendChild(tr);
     }
     count.textContent = `${data.total} result${data.total === 1 ? '' : 's'}`;

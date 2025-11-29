@@ -11,7 +11,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from passlib.hash import bcrypt
 from fastapi import Query
 
-from .database import engine, Base, get_db
+from .database import engine, Base, get_db, SessionLocal
 from . import models, schemas
 import os
 
@@ -19,6 +19,51 @@ app = FastAPI(title="BeeBee Library")
 
 # Create tables
 Base.metadata.create_all(bind=engine)
+
+# --------------------------------------------------
+# Initialize default row ONLY when SQLite DB is newly created
+# --------------------------------------------------
+import os
+from sqlalchemy import select
+
+def seed_sqlite_once():
+    # Only applies to sqlite
+    if not str(engine.url).startswith("sqlite"):
+        print("Not sqlite.")
+        return
+
+    db_path = str(engine.url).replace("sqlite:///", "")
+
+    print("Seeding SQLite with initial data...")
+
+    db = SessionLocal()
+    try:
+        # Check if ANY user exists — safest check
+        existing = db.scalars(select(models.User)).first()
+
+        if existing:
+            print("DB already seeded. Skip!")
+            return
+
+        from .models import User
+        from passlib.hash import bcrypt
+
+        # Hardcoded default user
+        user = User(
+            username="admin",
+            password_hash=bcrypt.hash("admin")
+        )
+        db.add(user)
+        db.commit()
+
+        print("Default user created successfully.")
+
+    finally:
+        db.close()
+
+seed_sqlite_once()
+# --------------------------------------------------
+
 
 # Sessions (signed cookies)
 SECRET_KEY = os.getenv("LIBRARY_SECRET_KEY", "dev-secret-change-me")
@@ -59,8 +104,12 @@ def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/books", response_class=HTMLResponse)
-def books_page(request: Request):
-    return templates.TemplateResponse("list.html", {"request": request})
+def books_page(request: Request, db: Session = Depends(get_db)):
+    user = current_user(request, db)
+    return templates.TemplateResponse(
+        "list.html",
+        {"request": request, "logged_in": bool(user)}
+    )
 
 # -----------------
 # Auth pages
@@ -209,3 +258,61 @@ def create_book(
     db.commit()
     db.refresh(obj)
     return obj
+
+@app.patch("/api/books/{book_id}", response_model=schemas.BookRead)
+def update_book(
+    book_id: int,
+    book: schemas.BookUpdate,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    # Require login
+    _ = require_login(request, db)
+
+    obj = db.get(models.Book, book_id)
+    if not obj:
+        raise HTTPException(status_code=404, detail="Book not found.")
+
+    data = book.model_dump(exclude_unset=True)
+    for field, value in data.items():
+        setattr(obj, field, value)
+
+    db.commit()
+    db.refresh(obj)
+    return obj
+
+@app.delete("/api/books/{book_id}", status_code=204)
+def delete_book(
+    book_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    # Require login
+    _ = require_login(request, db)
+
+    obj = db.get(models.Book, book_id)
+    if not obj:
+        raise HTTPException(status_code=404, detail="Book not found.")
+
+    db.delete(obj)
+    db.commit()
+    return
+
+@app.get("/edit/{book_id}", response_class=HTMLResponse)
+def edit_page(
+    book_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = current_user(request, db)
+    if not user:
+        return RedirectResponse(url="/login", status_code=302)
+
+    book = db.get(models.Book, book_id)
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found.")
+
+    return templates.TemplateResponse(
+        "edit.html",
+        {"request": request, "book": book}
+    )

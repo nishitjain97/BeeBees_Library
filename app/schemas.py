@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 class BookBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=255)
@@ -21,3 +21,10 @@ class BookSearchResponse(BaseModel):
     total: int
     page: int
     page_size: int
+
+class BookUpdate(BaseModel):
+    title: Optional[str] = None
+    author_first: Optional[str] = None
+    author_last: Optional[str] = None
+    year: Optional[str] = None
+    isbn: Optional[str] = None

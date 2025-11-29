@@ -38,40 +38,53 @@ async function load() {
 
 function render(data) {
   total = data.total;
-  tbody.innerHTML = '';
+  const container = document.getElementById("books-container");
+  container.innerHTML = "";
+
   if (!data.items.length) {
     empty.style.display = 'block';
     count.textContent = '0 results';
   } else {
     empty.style.display = 'none';
+
     for (const b of data.items) {
-      const tr = document.createElement('tr');
-      let row = `
-        <td>${escapeHtml(b.title)}</td>
-        <td>${escapeHtml(b.author_last)}, ${escapeHtml(b.author_first)}</td>
-        <td>${escapeHtml(b.year)}</td>
-        <td>${escapeHtml(b.isbn)}</td>
+      const div = document.createElement("div");
+      div.className = "book-card";
+
+      const coverUrl =
+        `https://covers.openlibrary.org/b/isbn/${escapeHtml(b.isbn)}-M.jpg?default=true`;
+
+      div.innerHTML = `
+        <img src="${coverUrl}" onerror="this.src='/static/no-cover.png'">
+
+        <div class="title">${escapeHtml(b.title)}</div>
+        <div class="author">${escapeHtml(b.author_first)} ${escapeHtml(b.author_last)}</div>
+
+        <div class="meta">
+            Year: ${escapeHtml(b.year || "N/A")}<br>
+            ISBN: ${escapeHtml(b.isbn || "N/A")}
+        </div>
       `;
 
       if (window.LOGGED_IN === true || window.LOGGED_IN === "true") {
-        row += `
-          <td>
-            <button class="btn small" onclick="editBook(${b.id})">Edit</button>
-            <button class="btn small danger" onclick="deleteBook(${b.id})">Delete</button>
-          </td>
+        div.innerHTML += `
+          <button class="btn small" onclick="editBook(${b.id})">Edit</button>
+          <button class="btn small danger" onclick="deleteBook(${b.id})">Delete</button>
         `;
       }
 
-      tr.innerHTML = row;
-
-      tbody.appendChild(tr);
+      container.appendChild(div);
     }
+
     count.textContent = `${data.total} result${data.total === 1 ? '' : 's'}`;
   }
+
   pageinfo.textContent = `Page ${data.page} of ${Math.max(1, Math.ceil(data.total / data.page_size))}`;
   prev.disabled = data.page <= 1;
   next.disabled = data.page >= Math.ceil(data.total / data.page_size);
 }
+
+
 
 function escapeHtml(s) {
   return (s ?? '').toString().replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));

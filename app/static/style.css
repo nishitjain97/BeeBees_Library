@@ -2,7 +2,7 @@ body { font-family: sans-serif; background: #0b1324; color: #e5eef7; margin: 0; 
 nav { display:flex; justify-content:space-between; padding: 1em; background:#121b33; }
 nav a { color: #9fb0c0; margin-left:1em; text-decoration:none; }
 nav a.active { color: white; }
-main.card { max-width:600px; margin:2em auto; background:#121b33; padding:1em; border-radius:8px; }
+main.card { margin:2em auto; background:#121b33; padding:1em; border-radius:8px; }
 form { display:grid; gap:1em; }
 form input { padding:0.5em; }
 button { padding:0.5em 1em; }
@@ -42,3 +42,95 @@ body:not(.landing) main {
 body.landing { overflow: hidden; }                /* no scroll on the hero screen */
 .overlay { position: fixed; top:0; right:0; bottom:0; left:0; z-index: 0; }
 .landing-card { position: relative; z-index: 1; }
+
+/* -----------------------------
+   GLOBAL PAGE IMPROVEMENTS
+------------------------------ */
+
+body {
+  font-family: system-ui, sans-serif;
+}
+
+/* -----------------------------
+   FILTER BAR
+------------------------------ */
+
+.filter-bar input,
+.filter-bar select {
+  border: 1px solid #ccc;
+  padding: 10px 12px;
+  border-radius: 12px;       /* SOFT ROUNDING */
+  background: white;
+  font-size: 0.9rem;
+  transition: 0.2s ease;
+}
+
+.filter-bar input:focus,
+.filter-bar select:focus {
+  outline: none;
+  border-color: #6d8dd6;
+  box-shadow: 0 0 5px rgba(109, 141, 214, 0.4);
+}
+
+.filter-bar button {
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+/* -----------------------------
+   BOOK CARDS (improved)
+------------------------------ */
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 24px;
+  margin-top: 25px;
+}
+
+.book-card {
+  background: #ffffffd9;      /* soft translucent white */
+  backdrop-filter: blur(4px); /* subtle frosted look */
+  padding: 14px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: 0.2s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+.book-card img {
+  width: 130px;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: #eaeaea;
+}
+
+/* Text styles inside cards */
+.book-card .title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+.book-card .author {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.book-card .meta {
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 12px;
+}

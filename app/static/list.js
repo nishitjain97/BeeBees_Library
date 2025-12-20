@@ -16,6 +16,64 @@ const count = document.getElementById('count');
 let page = 1;
 let total = 0;
 
+/* =========================================
+   Cover resolution (Google → OpenLibrary)
+   ========================================= */
+
+const coverCache = new Map();
+
+async function getGoogleBooksCover(isbn) {
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=isbn:${encodeURIComponent(isbn)}`
+    );
+    const data = await res.json();
+
+    const thumb =
+      data.items?.[0]?.volumeInfo?.imageLinks?.thumbnail ||
+      data.items?.[0]?.volumeInfo?.imageLinks?.smallThumbnail ||
+      null;
+
+    if (thumb) {
+      return thumb
+        .replace('http://', 'https://')
+        .replace('&edge=curl', '')
+        .replace('zoom=1', 'zoom=2');
+    }
+  } catch (e) {
+    console.warn('Google Books failed for ISBN', isbn);
+  }
+  return null;
+}
+
+function getOpenLibraryCover(isbn) {
+  return `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(isbn)}-M.jpg`;
+}
+
+async function resolveCover(isbn) {
+  if (!isbn) return null;
+
+  if (coverCache.has(isbn)) {
+    return coverCache.get(isbn);
+  }
+
+  // 1️⃣ Google Books
+  const google = await getGoogleBooksCover(isbn);
+  if (google) {
+    coverCache.set(isbn, google);
+    return google;
+  }
+
+  // 2️⃣ Open Library (no API call needed)
+  const openlib = getOpenLibraryCover(isbn);
+  coverCache.set(isbn, openlib);
+  return openlib;
+}
+
+/* =========================================
+   Query helpers
+   ========================================= */
+
 function params() {
   const ps = Number(pagesize.value || 20);
   const p = new URLSearchParams({
@@ -36,6 +94,10 @@ async function load() {
   render(data);
 }
 
+/* =========================================
+   Render
+   ========================================= */
+
 function render(data) {
   total = data.total;
   const container = document.getElementById("books-container");
@@ -51,28 +113,46 @@ function render(data) {
       const div = document.createElement("div");
       div.className = "book-card";
 
-      const coverUrl =
-        `https://covers.openlibrary.org/b/isbn/${escapeHtml(b.isbn)}-M.jpg?default=true`;
+      const img = document.createElement("img");
+      img.src = "/static/no-cover.png"; // elegant final fallback
+      img.loading = "lazy";
 
-      div.innerHTML = `
-        <img src="${coverUrl}" onerror="this.src='/static/no-cover.png'">
+      if (b.isbn) {
+        resolveCover(b.isbn).then(url => {
+          if (url) img.src = url;
+        });
+      }
 
+      img.onerror = () => {
+        img.src = "/static/no-cover.png";
+      };
+
+      div.appendChild(img);
+
+      div.insertAdjacentHTML(
+        "beforeend",
+        `
         <div class="title">${escapeHtml(b.title)}</div>
-        <div class="author">${escapeHtml(b.author_first)} ${escapeHtml(b.author_last)}</div>
-
-        <div class="meta">
-            Year: ${escapeHtml(b.year || "N/A")}<br>
-            ISBN: ${escapeHtml(b.isbn || "N/A")}
+        <div class="author">
+          ${escapeHtml(b.author_first)} ${escapeHtml(b.author_last)}
         </div>
-      `;
+        <div class="meta">
+          Year: ${escapeHtml(b.year || "N/A")}<br>
+          ISBN: ${escapeHtml(b.isbn || "N/A")}
+        </div>
+        `
+      );
 
       if (window.LOGGED_IN === true || window.LOGGED_IN === "true") {
-        div.innerHTML += `
+        div.insertAdjacentHTML(
+          "beforeend",
+          `
           <div class="actions">
             <button class="btn small" onclick="editBook(${b.id})">Edit</button>
             <button class="btn small danger" onclick="deleteBook(${b.id})">Delete</button>
           </div>
-        `;
+          `
+        );
       }
 
       container.appendChild(div);
@@ -81,29 +161,68 @@ function render(data) {
     count.textContent = `${data.total} result${data.total === 1 ? '' : 's'}`;
   }
 
-  pageinfo.textContent = `Page ${data.page} of ${Math.max(1, Math.ceil(data.total / data.page_size))}`;
+  pageinfo.textContent = `Page ${data.page} of ${Math.max(
+    1,
+    Math.ceil(data.total / data.page_size)
+  )}`;
   prev.disabled = data.page <= 1;
   next.disabled = data.page >= Math.ceil(data.total / data.page_size);
 }
 
-
+/* =========================================
+   Utils
+   ========================================= */
 
 function escapeHtml(s) {
-  return (s ?? '').toString().replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+  return (s ?? '').toString().replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  }[ch]));
 }
+
+/* =========================================
+   Events
+   ========================================= */
 
 let t;
 function debouncedLoad() {
   clearTimeout(t);
-  t = setTimeout(() => { page = 1; load(); }, 250);
+  t = setTimeout(() => {
+    page = 1;
+    load();
+  }, 250);
 }
 
 btnSearch.addEventListener('click', () => { page = 1; load(); });
-btnClear.addEventListener('click', () => { q.value=''; author.value=''; yf.value=''; yt.value=''; page=1; load(); });
-[q, author, yf, yt].forEach(el => el.addEventListener('input', debouncedLoad));
+btnClear.addEventListener('click', () => {
+  q.value = '';
+  author.value = '';
+  yf.value = '';
+  yt.value = '';
+  page = 1;
+  load();
+});
+
+[q, author, yf, yt].forEach(el =>
+  el.addEventListener('input', debouncedLoad)
+);
+
 sort.addEventListener('change', () => { page = 1; load(); });
 pagesize.addEventListener('change', () => { page = 1; load(); });
-prev.addEventListener('click', () => { if (page>1) { page--; load(); } });
-next.addEventListener('click', () => { page++; load(); });
+
+prev.addEventListener('click', () => {
+  if (page > 1) {
+    page--;
+    load();
+  }
+});
+
+next.addEventListener('click', () => {
+  page++;
+  load();
+});
 
 load();

@@ -139,7 +139,7 @@ button {
   display: grid;
   grid-template-columns: repeat(auto-fill, 160px);
   justify-content: center;
-  gap: 22px 16px;
+  gap: 45px 16px;
   padding: 28px 18px 30px;
   margin-top: 24px;
   border-radius: 14px;
@@ -150,14 +150,14 @@ button {
       rgba(255,255,255,0.18) 0px,
       rgba(255,255,255,0.18) 2px,
       transparent 2px,
-      transparent 250px
+      transparent 345px
     ),
     repeating-linear-gradient(
       to bottom,
       var(--wood-light) 0px,
       var(--wood-light) 14px,
       var(--wood-dark) 14px,
-      var(--wood-dark) 250px
+      var(--wood-dark) 345px
     );
 
   box-shadow:

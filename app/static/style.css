@@ -1,136 +1,284 @@
-body { font-family: sans-serif; background: #0b1324; color: #e5eef7; margin: 0; }
-nav { display:flex; justify-content:space-between; padding: 1em; background:#121b33; }
-nav a { color: #9fb0c0; margin-left:1em; text-decoration:none; }
-nav a.active { color: white; }
-main.card { margin:2em auto; background:#121b33; padding:1em; border-radius:8px; }
-form { display:grid; gap:1em; }
-form input { padding:0.5em; }
-button { padding:0.5em 1em; }
-table { width:100%; border-collapse:collapse; }
-th, td { padding:0.5em; border-bottom:1px solid #293a64; }
-.error { color: #ffb3b3; margin: 0.5em 0; }
-.linklike {
-  background: none; border: none; color: #9fb0c0; cursor: pointer; padding: 0 0 0 10px; font: inherit;
-}
-.linklike:hover { color: #ffffff; text-decoration: underline; }
+/* ======================================================
+   THEME VARIABLES
+====================================================== */
 
-/* ---- Fixed footer without forcing page scroll ---- */
-:root { --footer-h: 56px; }
-
-/* Don't pad the whole body; reserve space only where content scrolls */
-body { padding-bottom: 0; }  /* <- remove any previous padding-bottom */
-
-/* If your pages use <main> (they do on /add and /books), keep content clear of the footer */
-body:not(.landing) main {
-  padding-bottom: calc(var(--footer-h) + 12px);
+:root {
+  --wood-dark: #1b100b;
+  --wood-mid: #3b2416;
+  --wood-light: #7a4a2e;
+  --paper: #f2e7d8;
+  --ink-dark: #2a160d;
 }
 
-/* Footer: fixed, solid background, above everything */
-.site-footer {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: var(--footer-h);
-  display: flex; align-items: center; justify-content: right;
-  padding-right: 20px;
-  background: rgba(2, 2, 2, 0.15);            /* solid so it stays visible */
-  color: white;
-  border-top: 1px solid white;
-  z-index: 1000;
+/* ======================================================
+   GLOBAL
+====================================================== */
+
+* {
+  box-sizing: border-box;
 }
-
-/* Landing page tweaks so the overlay never affects footer or cause scroll */
-body.landing { overflow: hidden; }                /* no scroll on the hero screen */
-.overlay { position: fixed; top:0; right:0; bottom:0; left:0; z-index: 0; }
-.landing-card { position: relative; z-index: 1; }
-
-/* -----------------------------
-   GLOBAL PAGE IMPROVEMENTS
------------------------------- */
 
 body {
-  font-family: system-ui, sans-serif;
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #f3eadf;
+  background: #120a06;
 }
 
-/* -----------------------------
+/* ======================================================
+   NAV
+====================================================== */
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: linear-gradient(#3a2316, #2a170f);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+nav h1 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+nav a {
+  color: rgba(255,255,255,0.8);
+  margin-left: 1em;
+  text-decoration: none;
+}
+
+nav a.active,
+nav a:hover {
+  color: white;
+}
+
+/* ======================================================
+   MAIN FRAME
+====================================================== */
+
+main.card {
+  margin: 28px auto;
+  max-width: 1150px;
+  padding: 24px 20px 36px;
+  background: linear-gradient(var(--wood-mid), #2b170f);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 0 6px #24130c,
+    inset 0 0 0 1px rgba(255,255,255,0.06),
+    0 24px 50px rgba(0,0,0,0.55);
+}
+
+/* ======================================================
    FILTER BAR
------------------------------- */
+====================================================== */
 
 .filter-bar input,
 .filter-bar select {
-  border: 1px solid #ccc;
-  padding: 10px 12px;
-  border-radius: 12px;       /* SOFT ROUNDING */
-  background: white;
-  font-size: 0.9rem;
-  transition: 0.2s ease;
-}
-
-.filter-bar input:focus,
-.filter-bar select:focus {
-  outline: none;
-  border-color: #6d8dd6;
-  box-shadow: 0 0 5px rgba(109, 141, 214, 0.4);
-}
-
-.filter-bar button {
-  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.92);
+  color: #1e120b;
   border-radius: 12px;
+  padding: 10px 12px;
 }
 
-/* -----------------------------
-   BOOK CARDS (improved)
------------------------------- */
+button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ======================================================
+   BOOKSHELF
+====================================================== */
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 24px;
-  margin-top: 25px;
+  grid-template-columns: repeat(auto-fill, 160px);
+  justify-content: center;
+  gap: 22px 16px;
+  padding: 28px 18px 30px;
+  margin-top: 24px;
+  border-radius: 14px;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.18) 0px,
+      rgba(255,255,255,0.18) 2px,
+      transparent 2px,
+      transparent 250px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--wood-light) 0px,
+      var(--wood-light) 14px,
+      var(--wood-dark) 14px,
+      var(--wood-dark) 250px
+    );
+
+  box-shadow:
+    inset 0 30px 50px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
 }
 
+/* ======================================================
+   BOOK CARD (FIXED SIZE)
+====================================================== */
+
 .book-card {
-  background: #ffffffd9;      /* soft translucent white */
-  backdrop-filter: blur(4px); /* subtle frosted look */
-  padding: 14px;
-  border-radius: 16px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: 0.2s ease;
+  width: 160px;
+  height: 300px;              /* 🔒 fixed card height */
+  align-self: end;
+
+  background: linear-gradient(135deg, var(--paper), #e1cdb3);
+  color: var(--ink-dark);
+  border-radius: 4px 4px 2px 2px;
+  padding: 10px 8px;
+
+  display: grid;
+
+  box-shadow:
+    inset -6px 0 10px rgba(0,0,0,0.28),
+    0 10px 0 var(--wood-light),
+    0 20px 28px rgba(0,0,0,0.45);
+
+  transform-origin: bottom center;
+  transition: transform 0.18s ease;
 }
 
 .book-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  transform: translateY(-6px) scale(1.03);
+  z-index: 10;
 }
+
+/* ======================================================
+   COVER
+====================================================== */
 
 .book-card img {
-  width: 130px;
-  height: 190px;
+  width: 80%;
+  height: 160px;
+  justify-self: center;
   object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  background: #eaeaea;
+  border-radius: 2px;
+  background: rgba(0,0,0,0.08);
+  box-shadow:
+    inset -8px 0 12px rgba(0,0,0,0.35),
+    3px 6px 12px rgba(0,0,0,0.35);
+  padding-left: 3px; /* tiny spine offset */
 }
 
-/* Text styles inside cards */
+/* ======================================================
+   METADATA (ALIGNED LINES)
+====================================================== */
+
+.book-card .title,
+.book-card .author,
+.book-card .meta {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .book-card .title {
-  font-weight: 600;
-  font-size: 1rem;
-  margin-bottom: 6px;
-  color: #222;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 6px 0 1px;
 }
 
 .book-card .author {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 6px;
+  font-size: 0.82rem;
+  color: rgba(42,22,13,0.85);
+  line-height: 1.1;
+  margin: 0 0 1px;
 }
 
 .book-card .meta {
-  font-size: 0.8rem;
-  color: #777;
-  margin-bottom: 12px;
+  font-size: 0.68rem;
+  color: rgba(42,22,13,0.65);
+  margin-top: 20px;
+}
+
+/* ======================================================
+   ACTION BUTTONS (SIDE BY SIDE)
+====================================================== */
+
+.book-card .actions {
+  display: flex;
+  gap: 6px;
+}
+
+.book-card button {
+  flex: 1;
+  font-size: 0.7rem;
+  padding: 1px 0;
+}
+
+/* ======================================================
+   HELPERS
+====================================================== */
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.muted {
+  color: rgba(255,255,255,0.65);
+}
+
+/* ---- Fixed footer without forcing page scroll ---- */ 
+:root { 
+  --footer-h: 
+  56px; 
+} 
+
+/* Don't pad the whole body; reserve space only where content scrolls */ 
+body { 
+  padding-bottom: 0; 
+} 
+/* <- remove any previous padding-bottom */ 
+
+/* If your pages use <main> (they do on /add and /books), keep content clear of the footer */ 
+body:not(.landing) main { 
+  padding-bottom: calc(var(--footer-h) + 12px); 
+} 
+/* Footer: fixed, solid background, above everything */ 
+.site-footer { 
+  position: fixed; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  height: var(--footer-h); 
+  display: flex; 
+  align-items: center; 
+  justify-content: right; 
+  padding-right: 20px; 
+  background: rgba(2, 2, 2, 0.15); 
+  /* solid so it stays visible */ 
+  color: white; 
+  border-top: 1px solid white; 
+  z-index: 1000; 
+} 
+/* Landing page tweaks so the overlay never affects footer or cause scroll */ 
+body.landing { 
+  overflow: hidden; 
+} 
+/* no scroll on the hero screen */ 
+.overlay { 
+  position: fixed; 
+  top:0; 
+  right:0; 
+  bottom:0; 
+  left:0; 
+  z-index: 0; 
+} 
+
+.landing-card { 
+  position: relative; 
+  z-index: 1; 
 }

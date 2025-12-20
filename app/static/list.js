@@ -68,8 +68,10 @@ function render(data) {
 
       if (window.LOGGED_IN === true || window.LOGGED_IN === "true") {
         div.innerHTML += `
-          <button class="btn small" onclick="editBook(${b.id})">Edit</button>
-          <button class="btn small danger" onclick="deleteBook(${b.id})">Delete</button>
+          <div class="actions">
+            <button class="btn small" onclick="editBook(${b.id})">Edit</button>
+            <button class="btn small danger" onclick="deleteBook(${b.id})">Delete</button>
+          </div>
         `;
       }
 

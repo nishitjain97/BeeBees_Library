@@ -45,13 +45,54 @@ nav h1 {
 
 nav a {
   color: rgba(255,255,255,0.8);
-  margin-left: 1em;
   text-decoration: none;
 }
 
 nav a.active,
 nav a:hover {
   color: white;
+}
+
+/* ===============================
+   NAV LOGOUT BUTTON FIX
+=============================== */
+
+/* Make nav links + logout align perfectly */
+nav .links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Remove form layout quirks */
+nav .links form {
+  display: inline-flex;
+  margin: 0;
+}
+
+/* Make logout button behave like a nav link */
+nav .linklike {
+  background: none;
+  border: none;
+  padding: 0;
+
+  font: inherit;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.8);
+
+  cursor: pointer;
+  line-height: 1;
+}
+
+nav .linklike:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Keyboard accessibility */
+nav .linklike:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.4);
+  outline-offset: 3px;
 }
 
 /* ======================================================
@@ -281,4 +322,101 @@ body.landing {
 .landing-card { 
   position: relative; 
   z-index: 1; 
+}
+
+/* =========================================
+   SHARED FORM CARD (ADD + LOGIN)
+========================================= */
+
+.form-card,
+#book-form {
+  max-width: 520px;
+  margin: 20px auto 0;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+
+  background: rgba(255,255,255,0.94);
+  padding: 22px 24px 26px;
+  border-radius: 14px;
+
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.25),
+    inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+/* Login form has only 2 fields → stack nicely */
+.form-card label,
+#book-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #3a2417;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* Inputs */
+.form-card input,
+#book-form input {
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  border-radius: 10px;
+
+  border: 1px solid #c9c0b4;
+  background: #fff;
+  color: #1e120b;
+
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-card input:focus,
+#book-form input:focus {
+  outline: none;
+  border-color: #7a4a2e;
+  box-shadow: 0 0 0 3px rgba(122,74,46,0.25);
+}
+
+/* Buttons */
+.form-card button,
+#book-form button {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+
+  padding: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  background: linear-gradient(#7a4a2e, #5f371f);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.25);
+}
+
+.form-card button:hover,
+#book-form button:hover {
+  background: linear-gradient(#8b5536, #6a3f25);
+}
+
+/* Success / error message */
+#msg {
+  margin-top: 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+#msg.success {
+  color: #2e7d32;
+}
+
+#msg.error {
+  color: #b71c1c;
 }

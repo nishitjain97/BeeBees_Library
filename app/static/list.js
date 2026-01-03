@@ -46,8 +46,27 @@ async function getGoogleBooksCover(isbn) {
   return null;
 }
 
-function getOpenLibraryCover(isbn) {
-  return `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(isbn)}-M.jpg`;
+async function getOpenLibraryCover(isbn) {
+  try {
+    const metaUrl = `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(isbn)}.json`;
+    const res = await fetch(metaUrl);
+
+    // Cover does not exist → Open Library returns 404
+    if (!res.ok) return null;
+
+    const data = await res.json();
+
+    // Extra safety: ensure this is a valid, uploaded cover
+    if (data.deleted || data.failed || !data.uploaded) {
+      return null;
+    }
+
+    // If metadata exists, the image URL is guaranteed to exist
+    return `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(isbn)}-M.jpg`;
+  } catch (e) {
+    console.warn("Open Library cover check failed for ISBN", isbn);
+    return null;
+  }
 }
 
 async function resolveCover(isbn) {
@@ -57,14 +76,14 @@ async function resolveCover(isbn) {
     return coverCache.get(isbn);
   }
 
-  // 1️⃣ Open Library (primary, no API call)
-  const openlib = getOpenLibraryCover(isbn);
+  // 1️⃣ Open Library (validated via JSON)
+  const openlib = await getOpenLibraryCover(isbn);
   if (openlib) {
     coverCache.set(isbn, openlib);
     return openlib;
   }
 
-  // 2️⃣ Google Books (secondary)
+  // 2️⃣ Google Books fallback
   const google = await getGoogleBooksCover(isbn);
   if (google) {
     coverCache.set(isbn, google);

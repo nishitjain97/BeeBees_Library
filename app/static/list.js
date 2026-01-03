@@ -57,18 +57,23 @@ async function resolveCover(isbn) {
     return coverCache.get(isbn);
   }
 
-  // 1️⃣ Google Books
+  // 1️⃣ Open Library (primary, no API call)
+  const openlib = getOpenLibraryCover(isbn);
+  if (openlib) {
+    coverCache.set(isbn, openlib);
+    return openlib;
+  }
+
+  // 2️⃣ Google Books (secondary)
   const google = await getGoogleBooksCover(isbn);
   if (google) {
     coverCache.set(isbn, google);
     return google;
   }
 
-  // 2️⃣ Open Library (no API call needed)
-  const openlib = getOpenLibraryCover(isbn);
-  coverCache.set(isbn, openlib);
-  return openlib;
+  return null;
 }
+
 
 /* =========================================
    Query helpers

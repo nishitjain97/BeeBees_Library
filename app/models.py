@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, UniqueConstraint
+from sqlalchemy import Integer, String, UniqueConstraint, Boolean, Column
 from sqlalchemy.orm import Mapped, mapped_column
 from .database import Base
 
@@ -11,6 +11,8 @@ class Book(Base):
     author_last: Mapped[str] = mapped_column(String(255), index=True)
     year: Mapped[str] = mapped_column(String(10), index=True)
     isbn: Mapped[str] = mapped_column(String(32), index=True)
+
+    available = Column(Boolean, default=True, nullable=False)
 
 class User(Base):
     __tablename__ = "users"

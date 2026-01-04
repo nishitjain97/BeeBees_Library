@@ -8,6 +8,8 @@ class BookBase(BaseModel):
     year: str = Field(..., min_length=1, max_length=10)
     isbn: str = Field(..., min_length=1, max_length=32)
 
+    available: bool = True
+
 class BookCreate(BookBase):
     pass
 
@@ -28,3 +30,5 @@ class BookUpdate(BaseModel):
     author_last: Optional[str] = None
     year: Optional[str] = None
     isbn: Optional[str] = None
+
+    available: Optional[bool]

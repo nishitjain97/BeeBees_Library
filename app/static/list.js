@@ -137,6 +137,10 @@ function render(data) {
       const div = document.createElement("div");
       div.className = "book-card";
 
+      if (b.available === false) {
+        div.classList.add("unavailable");
+      }
+
       const img = document.createElement("img");
       img.src = "/static/no-cover.png"; // elegant final fallback
       img.loading = "lazy";
@@ -152,6 +156,14 @@ function render(data) {
       };
 
       div.appendChild(img);
+
+      if (b.available === false) {
+        div.insertAdjacentHTML(
+          "afterbegin",
+          `<div class="status-badge">Unavailable</div>`
+        );
+      }
+
 
       div.insertAdjacentHTML(
         "beforeend",

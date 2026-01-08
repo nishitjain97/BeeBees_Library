@@ -10,7 +10,6 @@ const btnClear = document.getElementById('clear');
 const prev = document.getElementById('prev');
 const next = document.getElementById('next');
 const pageinfo = document.getElementById('pageinfo');
-const pagesize = document.getElementById('pagesize');
 const count = document.getElementById('count');
 
 let page = 1;
@@ -98,16 +97,19 @@ async function resolveCover(isbn) {
    ========================================= */
 
 function params() {
-  const ps = Number(pagesize.value || 20);
+  const pageSize = getPageSize();
+
   const p = new URLSearchParams({
     page: String(page),
-    page_size: String(ps),
+    page_size: String(pageSize),
     sort: sort.value || 'title_asc'
   });
+
   if (q.value.trim()) p.set('q', q.value.trim());
   if (author.value.trim()) p.set('author', author.value.trim());
   if (yf.value.trim()) p.set('year_from', yf.value.trim());
   if (yt.value.trim()) p.set('year_to', yt.value.trim());
+
   return p;
 }
 
@@ -120,6 +122,24 @@ async function load() {
 /* =========================================
    Render
    ========================================= */
+
+function getGridColumns() {
+  const container = document.getElementById("books-container");
+  const cardWidth = 160;
+  const gap = 16; // from CSS
+  const containerWidth = container.clientWidth;
+
+  return Math.max(
+    1,
+    Math.floor((containerWidth + gap) / (cardWidth + gap))
+  );
+}
+
+function getPageSize() {
+  const rows = 5; // 🔒 fixed number of rows per page
+  return getGridColumns() * rows;
+}
+
 
 function render(data) {
   total = data.total;
@@ -193,7 +213,7 @@ function render(data) {
       container.appendChild(div);
     }
 
-    count.textContent = `${data.total} result${data.total === 1 ? '' : 's'}`;
+    count.textContent = `${data.total} books — showing ${data.items.length} per page`;
   }
 
   pageinfo.textContent = `Page ${data.page} of ${Math.max(
@@ -246,7 +266,6 @@ btnClear.addEventListener('click', () => {
 );
 
 sort.addEventListener('change', () => { page = 1; load(); });
-pagesize.addEventListener('change', () => { page = 1; load(); });
 
 prev.addEventListener('click', () => {
   if (page > 1) {
@@ -258,6 +277,15 @@ prev.addEventListener('click', () => {
 next.addEventListener('click', () => {
   page++;
   load();
+});
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    page = 1;
+    load();
+  }, 200);
 });
 
 load();

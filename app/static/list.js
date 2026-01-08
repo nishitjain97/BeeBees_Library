@@ -37,8 +37,7 @@ async function getGoogleBooksCover(isbn) {
     if (thumb) {
       return thumb
         .replace('http://', 'https://')
-        .replace('&edge=curl', '')
-        .replace('zoom=1', 'zoom=2');
+        .replace('&edge=curl', '');
     }
   } catch (e) {
     console.warn('Google Books failed for ISBN', isbn);

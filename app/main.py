@@ -314,5 +314,5 @@ def edit_page(
 
     return templates.TemplateResponse(
         "edit.html",
-        {"request": request, "book": book}
+        {"request": request, "book": book, "username": user.username}
     )

@@ -7,11 +7,13 @@
 </head>
 <body>
   <nav>
-    <h1><a href="/">📚 Bee Bee's Library </a>| Edit Book</h1>
+    <h1><a href="/">📚 Bee Bee's Library </a>| Edit Books</h1>
     <div class="links">
-      <a href="/">Home</a>
-      <a href="/books" class="active">Search</a>
-      <a href="/add">Add Books</a>
+        <a href="/">Home</a>
+        <a href="/books">Search</a>
+        <form method="post" action="/logout" style="display:inline;">
+        <button type="submit" class="linklike">Logout {% if username %} ({{ username }}){% endif %}</button>
+        </form>
     </div>
   </nav>
 
@@ -30,12 +32,12 @@
       </label>
 
       <label>
-        Author first name
+        Author (First)
         <input name="author_first" required value="{{ book.author_first }}">
       </label>
 
       <label>
-        Author last name
+        Author (Last)
         <input name="author_last" required value="{{ book.author_last }}">
       </label>
 

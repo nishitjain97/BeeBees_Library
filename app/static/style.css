@@ -329,7 +329,8 @@ body.landing {
 ========================================= */
 
 .form-card,
-#book-form {
+#book-form,
+#edit-form {
   max-width: 520px;
   margin: 20px auto 0;
 
@@ -348,7 +349,8 @@ body.landing {
 
 /* Login form has only 2 fields → stack nicely */
 .form-card label,
-#book-form label {
+#book-form label,
+#edit-form label {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -362,7 +364,8 @@ body.landing {
 
 /* Inputs */
 .form-card input,
-#book-form input {
+#book-form input,
+#edit-form input {
   padding: 10px 12px;
   font-size: 0.9rem;
   border-radius: 10px;
@@ -375,7 +378,8 @@ body.landing {
 }
 
 .form-card input:focus,
-#book-form input:focus {
+#book-form input:focus,
+#edit-form input:focus {
   outline: none;
   border-color: #7a4a2e;
   box-shadow: 0 0 0 3px rgba(122,74,46,0.25);
@@ -383,7 +387,8 @@ body.landing {
 
 /* Buttons */
 .form-card button,
-#book-form button {
+#book-form button,
+#edit-form button {
   grid-column: 1 / -1;
   margin-top: 10px;
 
@@ -402,7 +407,8 @@ body.landing {
 }
 
 .form-card button:hover,
-#book-form button:hover {
+#book-form button:hover,
+#edit-form button:hover {
   background: linear-gradient(#8b5536, #6a3f25);
 }
 
@@ -420,6 +426,8 @@ body.landing {
 #msg.error {
   color: #b71c1c;
 }
+
+
 
 /* ===============================
    UNAVAILABLE BOOK STATE

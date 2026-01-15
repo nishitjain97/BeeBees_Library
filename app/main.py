@@ -103,6 +103,10 @@ def require_login(request: Request, db: Session):
 def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/about", response_class=HTMLResponse)
+def root(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
 @app.get("/books", response_class=HTMLResponse)
 def books_page(request: Request, db: Session = Depends(get_db)):
     user = current_user(request, db)

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>BeeBee's | About Us</title>
+  <link rel="stylesheet" href="/static/style.css">
+
+  <style>
+    body.about {
+      margin: 0;
+      min-height: 100vh;
+      background: url("/static/landing_page_bg.png") no-repeat center center fixed;
+      background-size: cover;
+      color: #f3eadf;
+    }
+
+    .about-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 0;
+    }
+
+    .about-card {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 36px 32px;
+      background: rgba(20,20,30,0.88);
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    .about-card h2 {
+      text-align: center;
+      margin-bottom: 32px;
+      font-size: 3rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px 40px;
+      align-items: center;
+    }
+
+    .about-text {
+      font-size: 1.5rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.9);
+    }
+    .about-img {
+        display: flex;
+        align-items: center;      /* 👈 vertical center */
+        justify-content: center;  /* 👈 horizontal center */
+    }
+
+    .about-text h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.7rem;
+      color: #ffffff;
+    }
+
+    .about-img img {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+    }
+
+    /* Mobile */
+    @media (max-width: 820px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="about">
+
+  <nav>
+    <h1><a href="/">📚 Bee Bee's Library</a> | About Us</h1>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/books">Search</a>
+      <a href="/about" class="active">About Us</a>
+    </div>
+  </nav>
+
+  <main class="about-card">
+    <h2>About BeeBee’s Library</h2>
+
+    <div class="about-grid">
+      <!-- Row 1: Image left, text right -->
+      <div class="about-img">
+        <img src="/static/library.jpeg" style="width:70%" alt="Personal home library shelves">
+      </div>
+
+      <div class="about-text">
+        <h3>Built for Browsing</h3>
+        <p>
+          We love books, we love readers, and we definitely know the pain of chasing a popular title that’s always checked out. So we decided to do something about it! 
+        </p>
+        <p>
+            Our shelves and our website are here for you to browse, click, and reserve your next great read with a little less competition.
+        </p>
+      </div>
+
+      <!-- Row 2: Text left, image right -->
+      <div class="about-text">
+        <h3 style="padding-left: 40px;">A Personal Library</h3>
+        <p style="padding-left: 40px;">
+          Our dream? To grow this into a full-blown community library one day. This is just our first chapter, and with your help, we’re happily collecting stories one book at a time.
+        </p>
+      </div>
+
+      <div class="about-img">
+        <img src="/static/library_gogo.png" style="width: 70%;" alt="Gogo">
+      </div>
+    </div>
+  </main>
+
+  {% include "partials/footer.html" %}
+</body>
+</html>
